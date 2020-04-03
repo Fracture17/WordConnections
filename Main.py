@@ -1,10 +1,11 @@
 import sys
 from PySide2.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QGridLayout, QDialog, QFrame, QRadioButton, QButtonGroup, QSizePolicy, QLineEdit
 from random import shuffle
+import gensim.downloader as api
 
 
 class Display(QDialog):
-    def __init__(self, parent, words):
+    def __init__(self, parent, words, model=None):
         super().__init__()
 
         self.wordDisplays = []
@@ -14,11 +15,13 @@ class Display(QDialog):
         self.suggestion = None
         self.makeDisplay()
         self.setWords(words)
+        self.model = model
 
     def getSuggestion(self):
         self.iterationsRemaining -= 1
         self.save()
         self.suggestionBox.setText('')
+        self.setWords(self.words)
         if self.iterationsRemaining <= 0:
             self.done(0)
 
@@ -46,11 +49,24 @@ class Display(QDialog):
         confirmationButton.clicked.connect(self.getSuggestion)
         layout.addWidget(confirmationButton, 5, 1)
 
+        compareButton = QPushButton(self, text='Compare')
+        compareButton.clicked.connect(self.compareToModel)
+        layout.addWidget(compareButton, 5, 2)
+
         self.setLayout(layout)
 
     def setWords(self, words):
         for i, word in enumerate(words):
             self.wordDisplays[i].reset(word)
+
+    def compareToModel(self):
+        if self.model is None:
+            return
+
+        suggestion = self.suggestionBox.text().lower()
+        for display in self.wordDisplays:
+            similarity = self.model.similarity(suggestion, display.word.lower())
+            display.modelSimilarity.setText(str(similarity))
 
 
 class WordDisplay(QFrame):
@@ -85,7 +101,7 @@ class WordDisplay(QFrame):
 
         self.buttons = []
 
-        for i in range(6):
+        for i in range(4):
             scoreButton = QPushButton(self, text=str(i))
             scoreButton.setCheckable(True)
             if i == 0:
@@ -95,11 +111,14 @@ class WordDisplay(QFrame):
             layout.addWidget(scoreButton, 1, i)
             self.buttons.append(scoreButton)
 
+        self.modelSimilarity = QLabel(self, text='')
+        layout.addWidget(self.modelSimilarity, 2, 0)
+
         self.setLayout(layout)
 
     def getScore(self):
         score = int(self.group.checkedButton().text())
-        return score / 5
+        return score / 3
 
 
 def getRandomWords(n):
@@ -115,13 +134,15 @@ def getWordPool():
     return words
 
 
-def makeDisplay():
+def makeDisplay(model=None):
     words = getRandomWords(25)
-    x = Display(app, words)
+    x = Display(app, words, model)
     x.show()
     return x
 
 
+model = api.load("glove-wiki-gigaword-50")
+
 app = QApplication(sys.argv)
-x = makeDisplay()
+x = makeDisplay(model)
 sys.exit(app.exec_())
