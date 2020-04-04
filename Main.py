@@ -2,6 +2,16 @@ import sys
 from PySide2.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QGridLayout, QDialog, QFrame, QRadioButton, QButtonGroup, QSizePolicy, QLineEdit
 from random import shuffle
 import gensim.downloader as api
+from nltk.corpus import wordnet as wn
+
+
+class Model:
+    def __init__(self, model, similarityFunc):
+        self.model = model
+        self.similarityFunc = similarityFunc
+
+    def similarity(self, a, b):
+        return self.similarityFunc(self.model, a, b)
 
 
 class Display(QDialog):
@@ -141,7 +151,32 @@ def makeDisplay(model=None):
     return x
 
 
-model = api.load("glove-wiki-gigaword-50")
+def gloveSimilarity(model, a, b):
+    return model.similarity(a, b)
+
+
+def wordnetSimilarity(model, a, b):
+    best = -float('inf')
+    bestWords = ''
+    for x in model.synsets(a):
+        if x.name().split('.')[0] == a:
+            for y in model.synsets(b):
+                #if y.name().split('.')[0] == b:
+                try:
+                    similarity = x.wup_similarity(y)
+                    if similarity is None:
+                        similarity = y.wup_similarity(x)
+                    if similarity > best:
+                        best = similarity
+                        bestWords = x.name() + ", " + y.name()
+                except:
+                    pass
+    return f"{best:.4}  {bestWords}"
+
+#model = api.load("glove-wiki-gigaword-50")
+#model = Model(model, gloveSimilarity)
+
+model = Model(wn, wordnetSimilarity)
 
 app = QApplication(sys.argv)
 x = makeDisplay(model)
