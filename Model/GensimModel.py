@@ -11,3 +11,12 @@ class GensimModel(Model):
 
     def similarity(self, a: str, b: str):
         return self.model.similarity(a, b)
+
+
+def gloveSimilarity(model, a, b):
+    return model.similarity(a, b)
+
+
+def makeGloveWikiGiga50():
+    model = GensimModel("glove-wiki-gigaword-50")
+    return model
