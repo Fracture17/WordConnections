@@ -20,3 +20,19 @@ def gloveSimilarity(model, a, b):
 def makeGloveWikiGiga50():
     model = GensimModel("glove-wiki-gigaword-50")
     return model
+
+def makeGloveWikiGiga100():
+    model = GensimModel("glove-wiki-gigaword-100")
+    return model
+
+def makeGloveWikiGiga150():
+    model = GensimModel("glove-wiki-gigaword-150")
+    return model
+
+def makeGloveWikiGiga200():
+    model = GensimModel("glove-wiki-gigaword-200")
+    return model
+
+def makeGloveWikiGiga300():
+    model = GensimModel("glove-wiki-gigaword-300")
+    return model

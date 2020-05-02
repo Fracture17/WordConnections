@@ -37,4 +37,4 @@ def wordnetSimilarity(model, a, b):
 
 
 def makeWordnetModel():
-    return WordnetModel();
+    return WordnetModel()
