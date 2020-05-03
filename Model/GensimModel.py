@@ -25,14 +25,34 @@ def makeGloveWikiGiga100():
     model = GensimModel("glove-wiki-gigaword-100")
     return model
 
-def makeGloveWikiGiga150():
-    model = GensimModel("glove-wiki-gigaword-150")
-    return model
-
 def makeGloveWikiGiga200():
     model = GensimModel("glove-wiki-gigaword-200")
     return model
 
 def makeGloveWikiGiga300():
     model = GensimModel("glove-wiki-gigaword-300")
+    return model
+
+def makeFastTextModel():
+    model = GensimModel("fasttext-wiki-news-subwords-300")
+    return model
+
+def makeTwitterModel25():
+    model = GensimModel("glove-twitter-25")
+    return model
+
+def makeTwitterModel50():
+    model = GensimModel("glove-twitter-50")
+    return model
+
+def makeTwitterModel100():
+    model = GensimModel("glove-twitter-100")
+    return model
+
+def makeTwitterModel200():
+    model = GensimModel("glove-twitter-200")
+    return model
+
+def makeGoogleModel():
+    model = GensimModel("word2vec-google-news-300")
     return model

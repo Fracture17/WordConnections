@@ -1,7 +1,7 @@
 from Model.Model import Model
 from Model.TruthModel import TruthModel
 from Model.WordnetModel import makeWordnetModel
-from Model.GensimModel import makeGloveWikiGiga50
+from Model.GensimModel import *
 from Model.ConceptModel import makeConceptnetModel
 
 
@@ -21,7 +21,7 @@ def benchmark(truth: TruthModel, pred: Model):
 
 
 truth = TruthModel('connections.txt')
-pred = makeGloveWikiGiga50()
+pred = makeGoogleModel()
 
 x = benchmark(truth, pred)
 
