@@ -1,7 +1,7 @@
 from Model.Model import Model
 
 
-class EnsembleModel(Model):
+class MaxEnsembleModel(Model):
     def __init__(self, models: list):
         super().__init__()
 
@@ -10,8 +10,5 @@ class EnsembleModel(Model):
     def similarity(self, a: str, b: str):
         similarities = []
         for model in self.models:
-            try:
-                similarities.append(model.similarity(a, b))
-            except:
-                pass
-        return sum(similarities) / len(self.models)
+            similarities.append(model.similarity(a, b))
+        return max(similarities)

@@ -10,7 +10,8 @@ class GensimModel(Model):
         self.model = api.load(name)
 
     def similarity(self, a: str, b: str):
-        return self.model.similarity(a, b)
+        s = self.model.similarity(a, b)
+        return s
 
 
 def gloveSimilarity(model, a, b):
